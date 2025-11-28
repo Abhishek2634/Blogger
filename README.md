@@ -3,7 +3,7 @@
 A full-stack blogging application built with Django featuring role-based access control (RBAC), post management (CRUD), comments with moderation, tagging, search, and engagement metrics.
 
 ## Demo Video
-
+Please check the demo video of application here : [Video](https://drive.google.com/file/d/1iIBkGNWPMw21rVVNQR8tgPjSEG8Ww-Dm/view?usp=sharing)
 
 ## Table of Contents
 - [Project Overview](#project-overview)
