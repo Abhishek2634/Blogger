@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <article>
+        <!-- Title -->
+        <h1 class="mb-3 display-5 fw-bold">{{ object.title }}</h1>
+        
+        <!-- Metadata Section -->
+        <div class="text-muted mb-3 border-bottom pb-3">
+            <span class="me-3">👤 By <strong>{{ object.author }}</strong></span>
+            <span class="me-3">📅 {{ object.created_at|date:"F d, Y" }}</span>
+            <span>👁️ {{ object.views_count }} Views</span>
+        </div>
+
+        <!-- Tags Section -->
+        {% if object.tags.all %}
+            <div class="mb-4">
+                {% for tag in object.tags.all %}
+                    <span class="badge bg-secondary me-1 p-2">#{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Action Buttons (Visible only to Author or Admin) -->
+        {% if user == object.author or user.is_superuser %}
+            <div class="mb-4">
+                <a href="{% url 'post-update' object.pk %}" class="btn btn-outline-secondary btn-sm">
+                    ✏️ Edit Post
+                </a>
+                <a href="{% url 'post-delete' object.pk %}" class="btn btn-outline-danger btn-sm ms-2">
+                    🗑️ Delete Post
+                </a>
+            </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        <div class="lead mb-5" style="white-space: pre-wrap;">{{ object.content }}</div>
+
+        <hr class="my-5">
+
+        <!-- Interactions: Like & Share Dropdown -->
+        <div class="d-flex align-items-center mb-5 gap-3">
+            <!-- Like Button -->
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="like" class="btn {% if user in object.likes.all %}btn-success{% else %}btn-outline-primary{% endif %} px-4">
+                    👍 Like ({{ object.likes.count }})
+                </button>
+            </form>
+
+            <!-- Share Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle px-4" type="button" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    🔗 Share
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="shareDropdown">
+                    <!-- WhatsApp -->
+                    <li>
+                        <a class="dropdown-item" href="https://wa.me/?text=Check%20out%20this%20post:%20{{ request.build_absolute_uri }}" target="_blank">
+                            📱 WhatsApp
+                        </a>
+                    </li>
+                    <!-- Email -->
+                    <li>
+                        <a class="dropdown-item" href="mailto:?subject={{ object.title }}&body=Check%20out%20this%20post:%20{{ request.build_absolute_uri }}">
+                            📧 Email
+                        </a>
+                    </li>
+                    <!-- LinkedIn -->
+                    <li>
+                        <a class="dropdown-item" href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank">
+                            💼 LinkedIn
+                        </a>
+                    </li>
+                    <!-- Twitter/X -->
+                    <li>
+                        <a class="dropdown-item" href="https://twitter.com/intent/tweet?text={{ object.title }}&url={{ request.build_absolute_uri }}" target="_blank">
+                            🐦 Twitter
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <!-- Copy Link -->
+                    <li>
+                        <button class="dropdown-item" onclick="copyLink()">
+                            📋 Copy Link
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <span id="share-msg" class="text-success fw-bold ms-2" style="display:none;">✅ Link Copied!</span>
+        </div>
+
+        <!-- Comments Section -->
+        <h3 class="mb-4">💬 Comments ({{ object.comments.count }})</h3>
+        
+        <div class="mb-5">
+            {% for comment in object.comments.all %}
+                {% if comment.is_approved or user.is_superuser or comment.author == user %}
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="card-subtitle text-primary fw-bold">{{ comment.author }}</h6>
+                                <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                            </div>
+                            <p class="card-text">{{ comment.text }}</p>
+                            {% if not comment.is_approved %}
+                                <div class="alert alert-warning py-1 px-2 d-inline-block mb-0 small">
+                                    ⏳ Pending Admin Approval
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <div class="alert alert-light border text-center py-4">
+                    No comments yet. Be the first to share your thoughts!
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+            <div class="card bg-light border-0 p-4">
+                <h5 class="mb-3">Leave a Comment</h5>
+                <form method="POST">
+                    {% csrf_token %}
+                    <textarea name="text" class="form-control mb-3" rows="3" placeholder="Write your comment here..." required></textarea>
+                    <button type="submit" name="comment" class="btn btn-dark px-4">Post Comment</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Please <a href="{% url 'login' %}" class="fw-bold">login</a> to leave a comment.
+            </div>
+        {% endif %}
+    </article>
+
+    <!-- JavaScript for Copy Link -->
+    <script>
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href);
+        var msg = document.getElementById('share-msg');
+        msg.style.display = 'inline';
+        setTimeout(function() {
+            msg.style.display = 'none';
+        }, 2000);
+    }
+    </script>
+{% endblock %}

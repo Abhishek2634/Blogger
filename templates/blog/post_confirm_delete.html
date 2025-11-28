@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger shadow">
+                <div class="card-header bg-danger text-white fw-bold">
+                    Confirm Deletion
+                </div>
+                <div class="card-body text-center p-4">
+                    <h4 class="card-title mb-3">Are you sure?</h4>
+                    <p class="card-text mb-4">
+                        Do you really want to delete the post <strong>"{{ object.title }}"</strong>?<br>
+                        This process cannot be undone.
+                    </p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <a href="{% url 'post-detail' object.pk %}" class="btn btn-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-danger px-4">Yes, Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

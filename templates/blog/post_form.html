@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h2 class="h3 text-primary fw-bold">
+                    {% if object %}Edit Post{% else %}Create New Post{% endif %}
+                </h2>
+            </div>
+            
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <!-- Title Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Post Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Content Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.content.id_for_label }}" class="form-label fw-bold">Content</label>
+                        {{ form.content }}
+                        {% if form.content.errors %}
+                            <div class="text-danger small mt-1">{{ form.content.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <!-- Status Field -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.status.id_for_label }}" class="form-label fw-bold">Visibility Status</label>
+                            {{ form.status }}
+                        </div>
+                        
+                        <!-- Tags Field -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.tags.id_for_label }}" class="form-label fw-bold">Tags</label>
+                            {{ form.tags }}
+                            <div class="form-text text-muted small">{{ form.tags.help_text }}</div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <a href="{% url 'blog-home' %}" class="btn btn-light me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">
+                            {% if object %}Update Post{% else %}Publish Post{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
