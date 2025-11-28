@@ -95,12 +95,15 @@ python manage.py test blog.tests
 ```
 Expected output (example):
 ```
-Found 5 test(s).
+Found 10 test(s).
 Creating test database for alias 'default'...
-.....
-Ran 5 tests in 0.023s
+System check identified no issues (0 silenced).
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 5.566s
 
 OK
+Destroying test database for alias 'default'...
 ```
 
 ## Environment Variables
