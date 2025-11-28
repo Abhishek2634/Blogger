@@ -15,7 +15,6 @@ class UserRegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
-        # Add Bootstrap classes to all fields
         for field in self.fields:
             widget = self.fields[field].widget
             if hasattr(widget, 'input_type') and widget.input_type == 'select':

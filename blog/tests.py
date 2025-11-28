@@ -17,9 +17,7 @@ class BlogSystemTests(TestCase):
             status='PUB'
         )
 
-    # ==========================================
     # FUNCTIONALITY 1: ROLE-BASED ACCESS (AUTH)
-    # ==========================================
     def test_author_can_access_create_page(self):
         """Test 1: Author accessing create page returns 200 OK"""
         self.client.login(username='writer', password='pw')
@@ -32,9 +30,7 @@ class BlogSystemTests(TestCase):
         response = self.client.get('/post/new/')
         self.assertEqual(response.status_code, 403)
 
-    # ==========================================
     # FUNCTIONALITY 2: CRUD OPERATIONS
-    # ==========================================
     def test_post_creation_successful(self):
         """Test 3: Submitting form creates a post"""
         self.client.login(username='writer', password='pw')
@@ -52,9 +48,7 @@ class BlogSystemTests(TestCase):
         response = self.client.post(f'/post/{self.post.pk}/delete/')
         self.assertFalse(Post.objects.filter(pk=self.post.pk).exists())
 
-    # ==========================================
     # FUNCTIONALITY 3: SEARCH & DISCOVERY
-    # ==========================================
     def test_search_functionality_match(self):
         """Test 5: Search returns matching post"""
         response = self.client.get('/', {'q': 'Test'})
@@ -65,9 +59,7 @@ class BlogSystemTests(TestCase):
         response = self.client.get('/', {'q': 'XyZ123'})
         self.assertNotContains(response, "Test Post")
 
-    # ==========================================
     # FUNCTIONALITY 4: ANALYTICS & INTERACTIONS
-    # ==========================================
     def test_analytics_view_count(self):
         """Test 7: Viewing a post increments view count"""
         initial_views = self.post.views_count
@@ -81,9 +73,7 @@ class BlogSystemTests(TestCase):
         self.client.post(f'/post/{self.post.pk}/', {'like': 'true'})
         self.assertEqual(self.post.likes.count(), 1)
 
-    # ==========================================
     # FUNCTIONALITY 5: COMMENT MODERATION
-    # ==========================================
     def test_comment_moderation_default(self):
         """Test 9: Comments are not approved by default"""
         Comment.objects.create(post=self.post, author=self.reader, text="Nice")
@@ -93,7 +83,5 @@ class BlogSystemTests(TestCase):
         """Test 10: Unapproved comments are hidden from page"""
         Comment.objects.create(post=self.post, author=self.reader, text="Secret")
         response = self.client.get(f'/post/{self.post.pk}/')
-        # The author sees it (with pending tag), but we test standard visibility logic
-        # Note: In our template logic, the author DOES see it. 
-        # So we check if is_approved flag is False in DB.
+
         self.assertEqual(Comment.objects.filter(is_approved=True).count(), 0)

@@ -7,7 +7,6 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            # If user chooses ADMIN, give them power (For this assignment only)
             if user.role == 'ADMIN':
                 user.is_staff = True
                 user.is_superuser = True

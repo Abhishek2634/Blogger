@@ -10,5 +10,4 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='READER')
 
     def is_author(self):
-        # Only return True if role is explicitly AUTHOR or if they are a Superuser
         return self.role == 'AUTHOR' or self.is_superuser

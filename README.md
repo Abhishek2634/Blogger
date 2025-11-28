@@ -2,6 +2,9 @@
 
 A full-stack blogging application built with Django featuring role-based access control (RBAC), post management (CRUD), comments with moderation, tagging, search, and engagement metrics.
 
+## Demo Video
+
+
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Features](#features)
@@ -46,8 +49,8 @@ This project is a system-design style assignment implementing a blogging platfor
 
 1. Clone the repository
 ```bash
-git clone <YOUR_GITHUB_REPO_URL>
-cd django_blog_assignment
+git clone https://github.com/Abhishek2634/Blogger.git
+cd Blogger
 ```
 
 2. Create a virtual environment
@@ -88,7 +91,7 @@ Open http://127.0.0.1:8000/ in your browser.
 ## Running Tests
 Run the unit tests for the blog app:
 ```bash
-python manage.py test blog
+python manage.py test blog.tests  
 ```
 Expected output (example):
 ```
@@ -129,18 +132,27 @@ django_blog_assignment/
 ├── blog/              # Core Blog App (models, views, forms, tests, admin)
 │   ├── models.py
 │   ├── views.py
+|   |-- urls.py
 │   ├── forms.py
 │   ├── tests.py
 │   └── admin.py
+|
 ├── users/             # User Management App (custom user model, registration)
 │   ├── models.py
-│   └── views.py
+│   |── views.py
+|   |-- urls.py
+│   ├── forms.py
+│   |── admin.py
+|
 ├── templates/         # HTML templates (base, blog, users)
 │   ├── base.html
 │   ├── blog/
 │   └── users/
 ├── config/            # Project settings
 ├── manage.py
+|-- .gitignore
+|-- LICENCE
+|-- README.md
 └── requirements.txt
 ```
 
@@ -154,6 +166,6 @@ django_blog_assignment/
 Specify your chosen license here (e.g., MIT). If you don't have one yet, add a LICENSE file to the repository.
 
 ## Contact
-For questions about this project, reach out to the maintainer.
+For questions about this project, reach out to the [Abhishek](https://github.com/Abhishek2634)
 
-Happy hacking!
+Build with ❤️ by Abhishek.
